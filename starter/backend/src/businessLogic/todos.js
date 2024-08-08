@@ -25,7 +25,7 @@ export async function createTodoApi(createTodoRequest, jwtToken) {
 
 export async function getTodoItem(todoId, jwtToken) {
     const userId = parseUserId(jwtToken);
-    return await getTodo(todoId, userId);
+    return await getTodo(userId, todoId);
 }
 
 export async function updateTodoApi(todoId, updateTodoRequest, jwtToken) {
@@ -33,10 +33,8 @@ export async function updateTodoApi(todoId, updateTodoRequest, jwtToken) {
     console.log(updateTodoRequest);
     console.log(todoId);
     const userId = parseUserId(jwtToken);
-
-    const todoItem = await getTodoItem(todoId, userId);
   
-    await updateTodo(todoItem.todoId, todoItem.createdAt, {
+    return await updateTodo(userId, todoId, {
         name: updateTodoRequest.name,
         done: updateTodoRequest.done,
         dueDate: updateTodoRequest.dueDate,
@@ -45,8 +43,7 @@ export async function updateTodoApi(todoId, updateTodoRequest, jwtToken) {
 
 export async function deleteTodoApi(itemId, jwtToken) {
     const userId = parseUserId(jwtToken);
-    const todoItem = await getTodoItem(itemId, userId);
-    await deleteTodo(todoItem.todoId, todoItem.createdAt);
+    await deleteTodo(userId, itemId);
 }
 
 export async function generateUploadUrl(jwtToken, todoId) {

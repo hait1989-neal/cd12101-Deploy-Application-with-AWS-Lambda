@@ -2,6 +2,8 @@ import middy from '@middy/core'
 import cors from '@middy/http-cors'
 import { createTodoApi  } from '../../businessLogic/todos.js'
 
+
+
 async function createTodoHandler(event) {
 
   console.log('Processing event: ', event);

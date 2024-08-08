@@ -1,4 +1,4 @@
-import * as AWS from 'aws-sdk';
+import  AWSXRay from 'aws-xray-sdk-core';
 import {DynamoDBClient}  from '@aws-sdk/client-dynamodb';
 import {DynamoDBDocumentClient, QueryCommand, PutCommand, DeleteCommand} from '@aws-sdk/lib-dynamodb';
 
@@ -7,10 +7,11 @@ import { createLogger } from '../utils/logger.mjs'
 
 const logger = createLogger('todoAccess');
 
+
 const ddbClient = new DynamoDBClient('us-east-1');
+const dynamoDbXRay = AWSXRay.captureAWSv3Client(ddbClient)
+const dynamodb = DynamoDBDocumentClient.from(dynamoDbXRay);
 
-
-const dynamodb = DynamoDBDocumentClient.from(ddbClient);
 
 const todosTable  =  process.env.TODOS_TABLE;
 
@@ -50,34 +51,33 @@ export async function getTodos(userId) {
       TableName: todosTable,
       Item: newTodo
     }
-    let data = await dynamodb.send(new PutCommand(putItemParams));
-    return data;
+    await dynamodb.send(new PutCommand(putItemParams));
+    return newTodo;
   }
 
   export async function updateTodo(userId, todoId, updateData) {
     logger.info(`Updating a todo item: ${todoId}`);
+    const item = await getTodo(userId, todoId);
+    item.done = updateData.done;
     let pupdateItemParams = {
       TableName: todosTable,
-      Key: { userId, todoId },
-      ConditionExpression: 'attribute_exists(todoId)',
-      UpdateExpression: 'set #n = :n, dueDate = :due, done = :dn',
-      ExpressionAttributeNames: { '#n': 'name' },
-      ExpressionAttributeValues: {
-        ':n': updateData.name,
-        ':due': updateData.dueDate,
-        ':dn': updateData.done
-      }
+      Item: item
     }
-    let data = await dynamodb.send(new PutCommand(pupdateItemParams));
-    return data;
+    await dynamodb.send(new PutCommand(pupdateItemParams));
+    console.log('Updating done');
+    return item;
   }
 
   export async function deleteTodo(userId, todoId) {
+    console.log('deleteTodo1');
+    console.log(userId);
+    console.log(todoId);
     let removeItemParams = {
       TableName: todosTable,
       Key: { userId, todoId }
     }
     await dynamodb.send(new DeleteCommand(removeItemParams));
+    console.log('deleteTodo2');
   }
 
   export async function saveImgUrl(userId, todoId, bucketName) {

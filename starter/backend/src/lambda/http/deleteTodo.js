@@ -14,7 +14,6 @@ async function deleteTodoHandler(event) {
   try {
     const todoId = event.pathParameters.todoId
     await deleteTodoApi(todoId, jwtToken);
-    console.log(item);
     return {
       statusCode: 204,
       headers,

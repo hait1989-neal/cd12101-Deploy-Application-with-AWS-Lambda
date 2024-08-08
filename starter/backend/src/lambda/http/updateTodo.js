@@ -16,7 +16,6 @@ async function updateTodoHandler(event) {
     const todoId = event.pathParameters.todoId
     const updatedTodo = JSON.parse(event.body)
     const item = await updateTodoApi(todoId, updatedTodo, jwtToken);
-    console.log(item);
     return {
       statusCode: 204,
       headers,
