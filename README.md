@@ -1,10 +1,15 @@
-# Serverless TODO
+# Udacity - Develop and Deploy Serverless Apps
 
-To implement this project you need to implement a simple TODO application using AWS Lambda and Serverless framework. Search for all the `TODO:` comments in the code to find the placeholders that you need to implement.
-
-# Functionality of the application
+## Functionality of the application
 
 This appliation will allow to create/remove/update/get TODO items. Each TODO item can optionally have an attachment image. Each user only has access to TODO items that he/she has created. 
+
+<div align="center">
+  <img src="./screenshots/1.app.PNG" alt="Todo App" style="zoom:40%;" />
+</div>
+
+***
+
 
 # Functions to be implemented
 

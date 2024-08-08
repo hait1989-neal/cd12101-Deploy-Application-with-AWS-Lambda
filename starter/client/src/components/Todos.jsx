@@ -76,10 +76,7 @@ export function Todos() {
 
   async function onTodoDelete(todoId) {
     try {
-      const accessToken = await getAccessTokenSilently({
-        audience: `https://test-endpoint.auth0.com/api/v2/`,
-        scope: 'delete:todo'
-      })
+      const accessToken = await getAccessTokenSilently()
       await deleteTodo(accessToken, todoId)
       setTodos(todos.filter((todo) => todo.todoId !== todoId))
     } catch (e) {
@@ -90,10 +87,7 @@ export function Todos() {
   async function onTodoCheck(pos) {
     try {
       const todo = todos[pos]
-      const accessToken = await getAccessTokenSilently({
-        audience: `https://test-endpoint.auth0.com/api/v2/`,
-        scope: 'write:todo'
-      })
+      const accessToken = await getAccessTokenSilently()
       await patchTodo(accessToken, todo.todoId, {
         name: todo.name,
         dueDate: todo.dueDate,
@@ -127,10 +121,7 @@ export function Todos() {
   useEffect(() => {
     async function foo() {
       try {
-        const accessToken = await getAccessTokenSilently({
-          audience: `https://test-endpoint.auth0.com/api/v2/`,
-          scope: 'read:todos'
-        })
+        const accessToken = await getAccessTokenSilently();
         console.log('Access token: ' + accessToken)
         const todos = await getTodos(accessToken)
         setTodos(todos)
